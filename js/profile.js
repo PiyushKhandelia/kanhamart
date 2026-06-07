@@ -22,7 +22,7 @@ onAuthStateChanged(
 
     if (!user) {
 
-      location.href = "public/login.html";
+      location.href = "../public/login.html";
 
       return;
     }
@@ -110,7 +110,7 @@ document
       await signOut(auth);
 
       location.href =
-        "public/login.html";
+        "../public/login.html";
 
     } catch (error) {
 

@@ -116,7 +116,7 @@ export async function placeOrder(
   );
 
   location.href =
-    "public/orders.html";
+    "../public/orders.html";
 
 }
 
@@ -251,7 +251,7 @@ onAuthStateChanged(
     if(!user){
 
       location.href =
-        "public/login.html";
+        "../public/login.html";
 
       return;
     }
