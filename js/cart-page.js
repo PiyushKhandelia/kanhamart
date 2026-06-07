@@ -33,7 +33,7 @@ onAuthStateChanged(
 
     if(!user){
 
-      location.href = "login.html";
+      location.href = "public/login.html";
 
       return;
     }
@@ -265,7 +265,7 @@ document
   "click",
   () => {
 
-    location.href = "checkout.html";
+    location.href = "public/checkout.html";
 
   }
 );

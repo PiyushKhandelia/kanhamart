@@ -54,7 +54,7 @@ export async function login() {
 export function protectAdmin() {
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
-      location.href = "login.html";
+      location.href = "public/login.html";
       return;
     }
 
