@@ -34,7 +34,7 @@ export async function login() {
       });
     }
 
-    window.location.href = "index.html";
+    window.location.href = "../index.html";
 
   } catch (error) {
     if (error.code === "auth/cancelled-popup-request") {
