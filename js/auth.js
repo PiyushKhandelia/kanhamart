@@ -54,14 +54,14 @@ export async function login() {
 export function protectAdmin() {
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
-      location.href = "public/login.html";
+      location.href = "login.html";
       return;
     }
 
     const snap = await getDoc(doc(db, "users", user.uid));
     if (!snap.exists() || snap.data().role !== "admin") {
       alert("Unauthorized access");
-      location.href = "index.html";
+      location.href = "../index.html";
     }
   });
 }
