@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kanha Mart Admin</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <!-- ==========================================
+         ADMIN HEADER
+    =========================================== -->
+
+    <header class="admin-header">
+
+        <div class="admin-brand">
+
+            <h1>🛒 Kanha Mart</h1>
+            <p>Admin Dashboard</p>
+
+        </div>
+
+    </header>
+
+    <!-- ==========================================
+         MAIN CONTAINER
+    =========================================== -->
+
+    <div class="admin-container">
+
+        <!-- ==========================================
+             DASHBOARD CARDS
+        =========================================== -->
+
+        <div class="dashboard-grid">
+
+            <div class="dashboard-card active-card"
+                 data-target="categoriesSection">
+
+                <div class="card-icon">📂</div>
+
+                <h3>Categories</h3>
+
+                <span id="totalCategories">0</span>
+
+            </div>
+
+            <div class="dashboard-card"
+                 data-target="productsSection">
+
+                <div class="card-icon">📦</div>
+
+                <h3>Products</h3>
+
+                <span id="totalProducts">0</span>
+
+            </div>
+
+            <div class="dashboard-card"
+                  data-target="ordersSection">
+
+                <div class="card-icon">🛒</div>
+
+                <h3>Orders</h3>
+
+                <span id="totalOrders">0</span>
+
+            </div>
+
+            <div class="dashboard-card">
+
+                <div class="card-icon">👥</div>
+
+                <h3>Customers</h3>
+
+                <span>Coming Soon</span>
+
+            </div>
+
+        </div>
+
+        <!-- ==========================================
+             CATEGORY MANAGEMENT
+        =========================================== -->
+
+        <section id="categoriesSection"
+                 class="admin-section">
+
+            <div class="section-header">
+
+                <h2>📂 Category Management</h2>
+
+            </div>
+
+            <div class="form-card">
+
+                <h3>Create Category</h3>
+
+                <input
+                    id="catName"
+                    placeholder="Category Name"
+                >
+
+                <button id="addCategoryBtn">
+                    Add Category
+                </button>
+
+            </div>
+
+            <div class="table-card">
+
+                <h3>Manage Categories</h3>
+
+                <div id="categoriesTable">
+
+                    <!-- JS -->
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ==========================================
+             PRODUCT MANAGEMENT
+        =========================================== -->
+
+        <section id="productsSection"
+                 class="admin-section hidden">
+
+            <div class="section-header">
+
+                <h2>📦 Product Management</h2>
+
+            </div>
+
+            <div class="form-card">
+
+                <h3>Add Product</h3>
+
+                <input
+                    id="pName"
+                    placeholder="Product Name"
+                >
+
+                <input
+                    id="pPrice"
+                    type="number"
+                    placeholder="Price (₹)"
+                >
+
+                <textarea
+                    id="pDesc"
+                    placeholder="Description"
+                ></textarea>
+
+                <select id="pCategory">
+
+                    <option value="">
+                        Select Category
+                    </option>
+
+                </select>
+
+                <!-- ICON PICKER -->
+
+                <label>
+
+                    Product Icon
+
+                </label>
+
+                <div class="icon-picker">
+
+                    <input
+                        id="iconSearch"
+                        placeholder="Search icon..."
+                    >
+
+                    <div id="iconResults"
+                         class="icon-results">
+
+                    </div>
+
+                    <input
+                        id="pIcon"
+                        readonly
+                        placeholder="Selected Icon"
+                    >
+
+                </div>
+
+                <label>MFG Date</label>
+
+                <input type="date"
+                       id="pMfg">
+
+                <label>Expiry Date</label>
+
+                <input type="date"
+                       id="pExp">
+
+                <button id="addProductBtn">
+
+                    Add Product
+
+                </button>
+
+            </div>
+
+            <!-- ======================================
+                 MANAGE PRODUCTS
+            ======================================= -->
+
+            <div class="table-card">
+
+                <h3>Manage Products</h3>
+
+                <div id="productsTable">
+
+                    <!-- JS -->
+
+                </div>
+
+            </div>
+
+                </section>
+
+    </div>
+
+    <!-- ==========================================
+     ORDER MANAGEMENT
+========================================== -->
+
+<section id="ordersSection"
+         class="admin-section hidden">
+
+    <div class="section-header">
+
+        <h2>🛒 Order Management</h2>
+
+    </div>
+
+    <!-- STATUS COUNTS -->
+
+    <div class="order-stats">
+
+        <div class="order-stat-card pending">
+            <h3 id="pendingCount">0</h3>
+            <p>Pending</p>
+        </div>
+
+        <div class="order-stat-card confirmed">
+            <h3 id="confirmedCount">0</h3>
+            <p>Confirmed</p>
+        </div>
+
+        <div class="order-stat-card delivery">
+            <h3 id="deliveryCount">0</h3>
+            <p>Out for Delivery</p>
+        </div>
+
+        <div class="order-stat-card delivered">
+            <h3 id="deliveredCount">0</h3>
+            <p>Delivered</p>
+        </div>
+
+        <div class="order-stat-card cancelled">
+            <h3 id="cancelledCount">0</h3>
+            <p>Cancelled</p>
+        </div>
+
+    </div>
+
+    <div class="table-card">
+
+        <h3>Manage Orders</h3>
+
+        <div id="ordersTable"></div>
+
+    </div>
+
+</section>
+
+    <!-- ==========================================
+         EDIT CATEGORY MODAL
+    =========================================== -->
+
+    <div id="editCategoryModal"
+         class="modal hidden">
+
+        <div class="modal-content">
+
+            <h3>Edit Category</h3>
+
+            <input
+                id="editCategoryName"
+                placeholder="Category Name">
+
+            <button id="updateCategoryBtn">
+                Update Category
+            </button>
+
+            <button
+                class="btn-delete"
+                onclick="closeCategoryModal()">
+
+                Cancel
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         EDIT PRODUCT MODAL
+    =========================================== -->
+
+    <div id="editProductModal"
+         class="modal hidden">
+
+        <div class="modal-content">
+
+            <h3>Edit Product</h3>
+
+            <input
+                id="editPName"
+                placeholder="Product Name">
+
+            <input
+                id="editPPrice"
+                type="number"
+                placeholder="Price">
+
+            <textarea
+                id="editPDesc"
+                placeholder="Description">
+            </textarea>
+
+            <select id="editPCategory">
+
+                <option value="">
+                    Select Category
+                </option>
+
+            </select>
+
+            <input
+                id="editPIcon"
+                placeholder="Icon">
+
+            <button id="updateProductBtn">
+                Update Product
+            </button>
+
+            <button
+                class="btn-delete"
+                onclick="closeProductModal()">
+
+                Cancel
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <script type="module"
+            src="../js/admin.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Login | Kanha Mart</title>
+
+<link rel="stylesheet"
+      href="../css/style.css">
+```
+
+</head>
+
+<body class="login-page">
+
+```
+<div class="login-container">
+
+    <div class="login-card">
+
+        <div class="login-logo">
+
+            🛒
+
+        </div>
+
+        <h1>
+
+            Kanha Mart
+
+        </h1>
+
+        <p class="login-tagline">
+
+            Fresh groceries delivered to your doorstep
+
+        </p>
+
+        <div class="login-banner">
+
+            🥛 🍞 🍎 🧃 🍫
+
+        </div>
+
+        <button id="googleLoginBtn"
+                class="google-login-btn">
+
+            <span>
+
+                🔐
+
+            </span>
+
+            Continue with Google
+
+        </button>
+
+        <p class="login-footer">
+
+            By continuing, you agree to use Kanha Mart
+            for your grocery shopping experience.
+
+        </p>
+
+    </div>
+
+</div>
+
+<script type="module">
+
+    import { login } from "../js/auth.js";
+
+    document
+    .getElementById("googleLoginBtn")
+    .addEventListener("click", login);
+
+</script>
+```
+
+</body>
+
+</html>

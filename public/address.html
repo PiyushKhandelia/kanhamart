@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>My Addresses | Kanha Mart</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="../css/style.css">
+
+</head>
+
+<body>
+
+    <!-- =====================================
+         HEADER
+    ====================================== -->
+
+    <header class="home-header">
+
+        <div class="store-info">
+
+            <h1>📍 My Addresses</h1>
+
+            <p>
+                Manage delivery locations
+            </p>
+
+        </div>
+
+    </header>
+
+    <!-- =====================================
+         ADD ADDRESS FORM
+    ====================================== -->
+
+    <section class="section-container">
+
+        <div class="address-form-card">
+
+            <h2>
+
+                Add New Address
+
+            </h2>
+
+            <input
+                type="text"
+                id="addressName"
+                placeholder="Full Name"
+            >
+
+            <input
+                type="text"
+                id="addressPhone"
+                placeholder="Phone Number"
+            >
+
+            <textarea
+                id="addressLine"
+                placeholder="House No, Street, Area"
+            ></textarea>
+
+            <input
+                type="text"
+                id="addressLandmark"
+                placeholder="Landmark"
+            >
+
+            <input
+                type="text"
+                id="addressCity"
+                placeholder="City"
+            >
+
+            <input
+                type="text"
+                id="addressPincode"
+                placeholder="Pincode"
+            >
+
+            <button id="saveAddressBtn">
+
+                Save Address
+
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- =====================================
+         SAVED ADDRESSES
+    ====================================== -->
+
+    <section class="section-container">
+
+        <h2 class="section-title">
+
+            Saved Addresses
+
+        </h2>
+
+        <div id="addressesContainer">
+
+            <!-- Address Card -->
+
+            <div class="address-card">
+
+                <div class="address-top">
+
+                    <div>
+
+                        <span class="address-tag">
+
+                            Home
+
+                        </span>
+
+                    </div>
+
+                    <span class="default-badge">
+
+                        Default
+
+                    </span>
+
+                </div>
+
+                <h3>
+
+                    Piyush Khandelia
+
+                </h3>
+
+                <p>
+
+                    717/A Khudiram Colony,
+                    Motilal Gupta Road,
+                    Tollygunge,
+                    Kolkata - 700008
+
+                </p>
+
+                <p>
+
+                    📞 9876543210
+
+                </p>
+
+                <div class="address-actions">
+
+                    <button class="btn-edit">
+
+                        Edit
+
+                    </button>
+
+                    <button class="btn-delete">
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- Office Example -->
+
+            <div class="address-card">
+
+                <div class="address-top">
+
+                    <span class="address-tag office">
+
+                        Office
+
+                    </span>
+
+                </div>
+
+                <h3>
+
+                    Piyush Khandelia
+
+                </h3>
+
+                <p>
+
+                    BIT Mesra,
+                    Ranchi,
+                    Jharkhand
+
+                </p>
+
+                <p>
+
+                    📞 9876543210
+
+                </p>
+
+                <div class="address-actions">
+
+                    <button class="btn-edit">
+
+                        Edit
+
+                    </button>
+
+                    <button class="btn-delete">
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =====================================
+         BOTTOM NAVIGATION
+    ====================================== -->
+
+    <nav class="bottom-nav">
+
+        <a href="index.html"
+           class="nav-item">
+
+            🏠
+            <span>Home</span>
+
+        </a>
+
+        <a href="orders.html"
+           class="nav-item">
+
+            📦
+            <span>Orders</span>
+
+        </a>
+
+        <a href="cart.html"
+           class="nav-item">
+
+            🛒
+            <span>Cart</span>
+
+        </a>
+
+        <a href="profile.html"
+           class="nav-item active">
+
+            👤
+            <span>Profile</span>
+
+        </a>
+
+    </nav>
+        <script
+            type="module"
+            src="../js/address.js">
+        </script>
+</body>
+
+</html>
