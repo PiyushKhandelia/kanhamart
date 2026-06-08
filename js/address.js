@@ -1,21 +1,20 @@
+javascript
 import { auth, db } from "./firebase.js";
 
 import {
-  onAuthStateChanged
-}
-from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
 import {
-  collection,
-  addDoc,
-  getDocs,
-  deleteDoc,
-  updateDoc,
-  doc,
-  query,
-  where
-}
-from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    updateDoc,
+    doc,
+    query,
+    where
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
 /* ==========================================
    GLOBALS
@@ -24,29 +23,26 @@ from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 let currentUser = null;
 
 const addressCollection =
-  collection(db, "addresses");
+    collection(db, "addresses");
 
 /* ==========================================
    AUTH CHECK
 ========================================== */
 
-onAuthStateChanged(
-  auth,
-  async user => {
+onAuthStateChanged(auth, async (user) => {
 
     if (!user) {
 
-      location.href = "../public/login.html";
+        location.href = "login.html";
+        return;
 
-      return;
     }
 
     currentUser = user;
 
     await loadAddresses();
 
-  }
-);
+});
 
 /* ==========================================
    SAVE ADDRESS
@@ -54,112 +50,122 @@ onAuthStateChanged(
 
 document
 .getElementById("saveAddressBtn")
-?.addEventListener(
-  "click",
-  async () => {
+?.addEventListener("click", saveAddress);
 
-    const fullName =
-      document
-      .getElementById("addressName")
-      .value
-      .trim();
+async function saveAddress() {
 
-    const phone =
-      document
-      .getElementById("addressPhone")
-      .value
-      .trim();
+    try {
 
-    const address =
-      document
-      .getElementById("addressLine")
-      .value
-      .trim();
+        const fullName =
+            document
+            .getElementById("addressName")
+            .value
+            .trim();
 
-    const landmark =
-      document
-      .getElementById("addressLandmark")
-      .value
-      .trim();
+        const phone =
+            document
+            .getElementById("addressPhone")
+            .value
+            .trim();
 
-    const city =
-      document
-      .getElementById("addressCity")
-      .value
-      .trim();
+        const address =
+            document
+            .getElementById("addressLine")
+            .value
+            .trim();
 
-    const pincode =
-      document
-      .getElementById("addressPincode")
-      .value
-      .trim();
+        const landmark =
+            document
+            .getElementById("addressLandmark")
+            .value
+            .trim();
 
-    if (
-      !fullName ||
-      !phone ||
-      !address ||
-      !city ||
-      !pincode
-    ) {
+        const city =
+            document
+            .getElementById("addressCity")
+            .value
+            .trim();
 
-      alert(
-        "Please fill all required fields"
-      );
+        const pincode =
+            document
+            .getElementById("addressPincode")
+            .value
+            .trim();
 
-      return;
+        if (
+            !fullName ||
+            !phone ||
+            !address ||
+            !city ||
+            !pincode
+        ) {
+
+            alert("Please fill all required fields");
+            return;
+
+        }
+
+        if (!/^[0-9]{10}$/.test(phone)) {
+
+            alert("Please enter a valid 10 digit phone number");
+            return;
+
+        }
+
+        if (!/^[0-9]{6}$/.test(pincode)) {
+
+            alert("Please enter a valid 6 digit pincode");
+            return;
+
+        }
+
+        const existingAddresses =
+            await getDocs(
+                query(
+                    addressCollection,
+                    where(
+                        "userId",
+                        "==",
+                        currentUser.uid
+                    )
+                )
+            );
+
+        const isFirstAddress =
+            existingAddresses.empty;
+
+        await addDoc(
+            addressCollection,
+            {
+                userId: currentUser.uid,
+                fullName,
+                phone,
+                address,
+                landmark,
+                city,
+                pincode,
+                isDefault: isFirstAddress,
+                createdAt: new Date()
+            }
+        );
+
+        clearForm();
+
+        await loadAddresses();
+
+        alert("Address saved successfully");
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Failed to save address"
+        );
+
     }
 
-    const existing =
-      await getDocs(
-        query(
-          addressCollection,
-          where(
-            "userId",
-            "==",
-            currentUser.uid
-          )
-        )
-      );
-
-    const firstAddress =
-      existing.empty;
-
-    await addDoc(
-      addressCollection,
-      {
-        userId:
-          currentUser.uid,
-
-        fullName,
-
-        phone,
-
-        address,
-
-        landmark,
-
-        city,
-
-        pincode,
-
-        isDefault:
-          firstAddress,
-
-        createdAt:
-          new Date()
-      }
-    );
-
-    clearForm();
-
-    await loadAddresses();
-
-    alert(
-      "Address saved successfully"
-    );
-
-  }
-);
+}
 
 /* ==========================================
    LOAD ADDRESSES
@@ -167,189 +173,216 @@ document
 
 async function loadAddresses() {
 
-  const container =
-    document.getElementById(
-      "addressesContainer"
-    );
+    const container =
+        document.getElementById(
+            "addressesContainer"
+        );
 
-  container.innerHTML = "";
+    if (!container) return;
 
-  const q =
-    query(
-      addressCollection,
-      where(
-        "userId",
-        "==",
-        currentUser.uid
-      )
-    );
+    container.innerHTML = "";
 
-  const snap =
-    await getDocs(q);
+    try {
 
-  if (snap.empty) {
+        const snap =
+            await getDocs(
+                query(
+                    addressCollection,
+                    where(
+                        "userId",
+                        "==",
+                        currentUser.uid
+                    )
+                )
+            );
 
-    container.innerHTML = `
-      <div class="empty-state">
+        if (snap.empty) {
 
-        <h3>
+            container.innerHTML = `
 
-          No Addresses Found
+                <div class="empty-state">
 
-        </h3>
+                    <h3>
+                        No Addresses Found
+                    </h3>
 
-      </div>
-    `;
+                </div>
 
-    return;
-  }
+            `;
 
-  snap.forEach(docSnap => {
+            return;
 
-    const address =
-      docSnap.data();
+        }
 
-    container.innerHTML += `
+        snap.forEach(docSnap => {
 
-      <div class="address-card">
+            const address =
+                docSnap.data();
 
-        <div class="address-top">
+            container.innerHTML += `
 
-          <span class="address-tag">
+                <div class="address-card">
 
-            Address
+                    <div class="address-top">
 
-          </span>
+                        <span class="address-tag">
 
-          ${
-            address.isDefault
-              ? `
-                <span class="default-badge">
-                  Default
-                </span>
-              `
-              : ""
-          }
+                            Address
 
-        </div>
+                        </span>
 
-        <h3>
+                        ${
+                            address.isDefault
+                            ?
+                            `
+                            <span class="default-badge">
+                                Default
+                            </span>
+                            `
+                            :
+                            ""
+                        }
 
-          ${address.fullName}
+                    </div>
 
-        </h3>
+                    <h3>
 
-        <p>
+                        ${address.fullName}
 
-          ${address.address}
+                    </h3>
 
-          <br>
+                    <p>
 
-          ${address.landmark}
+                        ${address.address}
 
-          <br>
+                        <br>
 
-          ${address.city}
+                        ${
+                            address.landmark
+                            ?
+                            address.landmark + "<br>"
+                            :
+                            ""
+                        }
 
-          -
+                        ${address.city}
 
-          ${address.pincode}
+                        -
 
-        </p>
+                        ${address.pincode}
 
-        <p>
+                    </p>
 
-          📞 ${address.phone}
+                    <p>
 
-        </p>
+                        📞 ${address.phone}
 
-        <div class="address-actions">
+                    </p>
 
-          ${
-            !address.isDefault
-              ? `
-                <button
-                  class="btn-edit"
-                  onclick="setDefaultAddress('${docSnap.id}')">
+                    <div class="address-actions">
 
-                  Set Default
+                        ${
+                            !address.isDefault
+                            ?
+                            `
+                            <button
+                                class="btn-default"
+                                onclick="setDefaultAddress('${docSnap.id}')">
 
-                </button>
-              `
-              : ""
-          }
+                                Set Default
 
-          <button
-            class="btn-delete"
-            onclick="deleteAddress('${docSnap.id}')">
+                            </button>
+                            `
+                            :
+                            ""
+                        }
 
-            Delete
+                        <button
+                            class="btn-delete"
+                            onclick="deleteAddress('${docSnap.id}')">
 
-          </button>
+                            Delete
 
-        </div>
+                        </button>
 
-      </div>
+                    </div>
 
-    `;
+                </div>
 
-  });
+            `;
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
 
 }
 
 /* ==========================================
-   SET DEFAULT ADDRESS
+   SET DEFAULT
 ========================================== */
 
 window.setDefaultAddress =
 async function(addressId) {
 
-  const q =
-    query(
-      addressCollection,
-      where(
-        "userId",
-        "==",
-        currentUser.uid
-      )
-    );
+    try {
 
-  const snap =
-    await getDocs(q);
+        const snap =
+            await getDocs(
+                query(
+                    addressCollection,
+                    where(
+                        "userId",
+                        "==",
+                        currentUser.uid
+                    )
+                )
+            );
 
-  const updates = [];
+        const updates = [];
 
-  snap.forEach(addressDoc => {
+        snap.forEach(addressDoc => {
 
-    updates.push(
-      updateDoc(
-        doc(
-          db,
-          "addresses",
-          addressDoc.id
-        ),
-        {
-          isDefault:false
-        }
-      )
-    );
+            updates.push(
 
-  });
+                updateDoc(
+                    doc(
+                        db,
+                        "addresses",
+                        addressDoc.id
+                    ),
+                    {
+                        isDefault:false
+                    }
+                )
 
-  await Promise.all(updates);
+            );
 
-  await updateDoc(
-    doc(
-      db,
-      "addresses",
-      addressId
-    ),
-    {
-      isDefault:true
+        });
+
+        await Promise.all(updates);
+
+        await updateDoc(
+            doc(
+                db,
+                "addresses",
+                addressId
+            ),
+            {
+                isDefault:true
+            }
+        );
+
+        await loadAddresses();
+
+    } catch (error) {
+
+        console.error(error);
+
     }
-  );
-
-  await loadAddresses();
 
 };
 
@@ -360,23 +393,75 @@ async function(addressId) {
 window.deleteAddress =
 async function(addressId) {
 
-  const confirmDelete =
-    confirm(
-      "Delete this address?"
-    );
+    try {
 
-  if (!confirmDelete)
-    return;
+        const confirmed =
+            confirm(
+                "Delete this address?"
+            );
 
-  await deleteDoc(
-    doc(
-      db,
-      "addresses",
-      addressId
-    )
-  );
+        if (!confirmed) return;
 
-  await loadAddresses();
+        await deleteDoc(
+            doc(
+                db,
+                "addresses",
+                addressId
+            )
+        );
+
+        const remaining =
+            await getDocs(
+                query(
+                    addressCollection,
+                    where(
+                        "userId",
+                        "==",
+                        currentUser.uid
+                    )
+                )
+            );
+
+        let hasDefault = false;
+
+        remaining.forEach(doc => {
+
+            if (doc.data().isDefault) {
+
+                hasDefault = true;
+
+            }
+
+        });
+
+        if (
+            !hasDefault &&
+            !remaining.empty
+        ) {
+
+            const firstDoc =
+                remaining.docs[0];
+
+            await updateDoc(
+                doc(
+                    db,
+                    "addresses",
+                    firstDoc.id
+                ),
+                {
+                    isDefault:true
+                }
+            );
+
+        }
+
+        await loadAddresses();
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
 
 };
 
@@ -386,28 +471,11 @@ async function(addressId) {
 
 function clearForm() {
 
-  document.getElementById(
-    "addressName"
-  ).value = "";
-
-  document.getElementById(
-    "addressPhone"
-  ).value = "";
-
-  document.getElementById(
-    "addressLine"
-  ).value = "";
-
-  document.getElementById(
-    "addressLandmark"
-  ).value = "";
-
-  document.getElementById(
-    "addressCity"
-  ).value = "";
-
-  document.getElementById(
-    "addressPincode"
-  ).value = "";
+    document.getElementById("addressName").value = "";
+    document.getElementById("addressPhone").value = "";
+    document.getElementById("addressLine").value = "";
+    document.getElementById("addressLandmark").value = "";
+    document.getElementById("addressCity").value = "";
+    document.getElementById("addressPincode").value = "";
 
 }

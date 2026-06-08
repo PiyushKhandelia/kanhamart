@@ -87,9 +87,11 @@ export async function addToCart(product){
 
   }
 
-  await setDoc(cartRef,{
-    items
-  });
+ await setDoc(
+  cartRef,
+  { items },
+  { merge:true }
+);
 
   updateCartBadge();
 
@@ -189,6 +191,10 @@ export async function updateQuantity(
   const snap =
     await getDoc(cartRef);
 
+  if(!snap.exists()){
+   return;
+}
+
   const items =
     snap.data().items || [];
 
@@ -236,6 +242,10 @@ export async function removeItem(
   const snap =
     await getDoc(cartRef);
 
+  if(!snap.exists()){
+   return;
+}
+    
   const items =
     snap.data().items || [];
 

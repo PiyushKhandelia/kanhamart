@@ -1,3 +1,16 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:
+    "Segoe UI",
+    sans-serif;
+    background:#f8fafc;
+}
+
 /* =====================================================
 LOGIN PAGE
 ===================================================== */
@@ -82,12 +95,15 @@ justify-content:center;
 gap:10px;
 }
 
-.google-login-btn:hover
+.google-login-btn:hover{
+    background:#15803d;
+}
+
 .login-footer{
-margin-top:20px;
-color:#64748b;
-font-size:.85rem;
-line-height:1.5;
+    margin-top:20px;
+    color:#64748b;
+    font-size:.85rem;
+    line-height:1.5;
 }
 
 /* =====================================================
@@ -252,6 +268,35 @@ MOBILE
 }
 
 /* =====================================================
+   HERO BANNER
+===================================================== */
+
+.hero-banner{
+    margin:15px;
+
+    background:
+    linear-gradient(
+      135deg,
+      #16a34a,
+      #22c55e
+    );
+
+    color:white;
+
+    border-radius:20px;
+
+    padding:30px;
+}
+
+.hero-content h2{
+    margin-bottom:10px;
+}
+
+.hero-content p{
+    opacity:.95;
+}
+
+/* =====================================================
    PRODUCT GRID
 ===================================================== */
 
@@ -305,6 +350,94 @@ MOBILE
     font-size:.9rem;
 
     min-height:40px;
+}
+
+/* =====================================================
+   FLOATING CART
+===================================================== */
+
+.floating-cart{
+    position:fixed;
+
+    right:20px;
+    bottom:95px;
+
+    width:60px;
+    height:60px;
+
+    border-radius:50%;
+
+    background:#16a34a;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    text-decoration:none;
+
+    font-size:1.6rem;
+
+    z-index:999;
+}
+
+#cartCount{
+    position:absolute;
+
+    top:-5px;
+    right:-5px;
+
+    background:red;
+
+    color:white;
+
+    width:22px;
+    height:22px;
+
+    border-radius:50%;
+
+    font-size:.75rem;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+}
+
+/* =====================================================
+   QUICK CART
+===================================================== */
+
+.quick-actions{
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:12px;
+}
+
+.quick-card{
+    background:white;
+
+    border-radius:16px;
+
+    padding:15px;
+
+    text-align:center;
+
+    box-shadow:
+    0 3px 10px rgba(0,0,0,.08);
+
+    cursor:pointer;
+}
+
+.quick-card span{
+    display:block;
+
+    margin-top:8px;
 }
 
 /* =====================================================
@@ -788,6 +921,11 @@ body{
     cursor:pointer;
 }
 
+.btn-default{
+    background:#16a34a;
+    color:white;
+}
+
 /* =====================================================
    CATEGORY BADGE
 ===================================================== */
@@ -1082,6 +1220,14 @@ body{
     font-weight:bold;
 }
 
+.checkout-address{
+    cursor:pointer;
+}
+
+.active-address{
+    border:3px solid #16a34a;
+}
+
 /* ======================================
    ORDERS PAGE
 ====================================== */
@@ -1147,22 +1293,22 @@ body{
     font-weight:600;
 }
 
-.pending{
+.status-pending{ 
     background:#fef3c7;
     color:#92400e;
 }
 
-.confirmed{
+.status-confirmed{
     background:#dbeafe;
     color:#1e40af;
 }
 
-.delivered{
+.status-delivered{
     background:#dcfce7;
     color:#166534;
 }
 
-.cancelled{
+.status-cancelled{
     background:#fee2e2;
     color:#991b1b;
 }
@@ -1204,6 +1350,15 @@ body{
 /* ======================================
    PROFILE PAGE
 ====================================== */
+.profile-menu{
+    color:white;
+
+    text-decoration:none;
+
+    font-size:1.8rem;
+
+    cursor:pointer;
+}
 
 .profile-card{
     background:white;

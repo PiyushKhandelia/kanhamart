@@ -60,17 +60,20 @@ const groceryIcons = [
 
 window.addEventListener("DOMContentLoaded", async () => {
 
-  setupDashboardCards();
+setupDashboardCards();
 
-  renderIconPicker();
+renderIconPicker();
 
-  await loadDashboardCounts();
+await loadDashboardCounts();
 
-  await loadCategoriesDropdown();
+await loadCategoriesDropdown();
 
-  await renderCategories();
+await renderCategories();
 
-  await renderProducts();
+await renderProducts();
+
+await loadOrders();
+
 });
 
 /* ==========================================
@@ -188,6 +191,11 @@ async function loadDashboardCounts() {
   const prodSnap =
     await getDocs(productsCollection);
 
+  const orderSnap =
+    await getDocs(
+      collection(db, "orders")
+    );
+
   document.getElementById(
     "totalCategories"
   ).textContent = catSnap.size;
@@ -195,6 +203,11 @@ async function loadDashboardCounts() {
   document.getElementById(
     "totalProducts"
   ).textContent = prodSnap.size;
+
+  document.getElementById(
+    "totalOrders"
+  ).textContent = orderSnap.size;
+
 }
 
 /* ==========================================
@@ -970,5 +983,7 @@ async function refreshAdmin() {
   await renderCategories();
 
   await renderProducts();
+
+  await loadOrders();
 
 }

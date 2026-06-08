@@ -22,7 +22,7 @@ onAuthStateChanged(
 
     if (!user) {
 
-      location.href = "../public/login.html";
+      location.href = "login.html";
 
       return;
     }
@@ -61,20 +61,23 @@ async function loadProfile(user) {
         userDoc.data();
 
       profileName.textContent =
-        data.name || "User";
+        data.name ||
+  user.displayName ||
+  "User";
 
       profileEmail.textContent =
         data.email || "";
 
     } else {
 
-      profileName.textContent =
-        user.displayName || "User";
+  profileName.textContent =
+    user.displayName ||
+    "User";
 
-      profileEmail.textContent =
-        user.email || "";
+  profileEmail.textContent =
+    user.email || "";
 
-    }
+}
 
   } catch (error) {
 
@@ -110,7 +113,7 @@ document
       await signOut(auth);
 
       location.href =
-        "../public/login.html";
+        "login.html";
 
     } catch (error) {
 

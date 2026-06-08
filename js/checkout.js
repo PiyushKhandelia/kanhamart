@@ -27,7 +27,7 @@ onAuthStateChanged(
 
     if(!user){
 
-      location.href = "../public/login.html";
+      location.href = "login.html";
       return;
     }
 
@@ -59,7 +59,38 @@ async function loadAddresses(){
 
   container.innerHTML = "";
 
+  if(snap.empty){
+
+  container.innerHTML = `
+
+    <div class="empty-state">
+
+      <h3>
+        No Saved Addresses
+      </h3>
+
+      <p>
+        Please add an address first.
+      </p>
+
+      <a href="address.html">
+
+        Add Address
+
+      </a>
+
+    </div>
+
+  `;
+
+  return;
+}
+
   snap.forEach(doc => {
+
+    if(address.isDefault){
+      selectedAddress = doc.id;
+      }
 
     const address =
       doc.data();
@@ -67,8 +98,10 @@ async function loadAddresses(){
     container.innerHTML += `
 
       <div
-        class="address-card checkout-address"
-        onclick="selectAddress('${doc.id}')">
+  class="address-card checkout-address ${
+    address.isDefault ? "active-address" : ""
+  }"
+  onclick="selectAddress('${doc.id}', this)">
 
         <h3>
 
@@ -91,26 +124,20 @@ async function loadAddresses(){
 }
 
 window.selectAddress =
-function(id){
+function(id, element){
 
   selectedAddress = id;
 
   document
-  .querySelectorAll(
-    ".checkout-address"
-  )
-  .forEach(card =>
-    card.classList.remove(
-      "active-address"
-    )
-  );
-
-  event.currentTarget
-    .classList.add(
-      "active-address"
+    .querySelectorAll(".checkout-address")
+    .forEach(card =>
+      card.classList.remove("active-address")
     );
 
+  element.classList.add("active-address");
+
 };
+
 
 document
 .getElementById(
@@ -129,9 +156,19 @@ document
       return;
     }
 
-    await placeOrder(
-      selectedAddress
-    );
+    try {
+
+  await placeOrder(selectedAddress);
+
+} catch(error) {
+
+  console.error(error);
+
+  alert(
+    "Failed to place order. Please try again."
+  );
+
+}
 
   }
 );

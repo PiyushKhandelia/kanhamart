@@ -58,78 +58,6 @@
 
             <!-- JS will render items -->
 
-            <div class="cart-card">
-
-                <div class="cart-product-icon">
-
-                    🥛
-
-                </div>
-
-                <div class="cart-product-info">
-
-                    <h3>
-                        Amul Milk
-                    </h3>
-
-                    <p>
-                        Fresh Milk 500ml
-                    </p>
-
-                    <strong>
-                        ₹35
-                    </strong>
-
-                </div>
-
-                <div class="cart-actions">
-
-                    <button>-</button>
-
-                    <span>1</span>
-
-                    <button>+</button>
-
-                </div>
-
-            </div>
-
-            <div class="cart-card">
-
-                <div class="cart-product-icon">
-
-                    🍞
-
-                </div>
-
-                <div class="cart-product-info">
-
-                    <h3>
-                        Bread
-                    </h3>
-
-                    <p>
-                        Fresh Bakery Bread
-                    </p>
-
-                    <strong>
-                        ₹40
-                    </strong>
-
-                </div>
-
-                <div class="cart-actions">
-
-                    <button>-</button>
-
-                    <span>2</span>
-
-                    <button>+</button>
-
-                </div>
-
-            </div>
-
         </div>
 
     </section>
@@ -142,111 +70,47 @@
 
         <div class="summary-card">
 
-            <h2>
+    <h2>Order Summary</h2>
 
-                Order Summary
+    <div class="summary-row">
 
-            </h2>
+        <span>Subtotal</span>
 
-            <div class="summary-row">
+        <span id="subtotalAmount">
+            ₹0
+        </span>
 
-                <span>
+    </div>
 
-                    Subtotal
+    <div class="summary-row">
 
-                </span>
+        <span>Delivery Fee</span>
 
-                <div class="summary-row">
+        <span id="deliveryFee">
+            ₹0
+        </span>
 
-    <span>
+    </div>
 
-        Subtotal
+    <div class="summary-row total-row">
 
-    </span>
+        <span>Total</span>
 
-    <span id="subtotalAmount">
+        <span id="totalAmount">
+            ₹0
+        </span>
 
-        ₹0
+    </div>
 
-    </span>
+    <button
+        id="checkoutBtn"
+        class="checkout-btn">
 
-</div>
+        Proceed To Checkout
 
-<div class="summary-row">
-
-    <span>
-
-        Delivery Fee
-
-    </span>
-
-    <span id="deliveryFee">
-
-        ₹0
-
-    </span>
+    </button>
 
 </div>
-
-<div class="summary-row total-row">
-
-    <span>
-
-        Total
-
-    </span>
-
-    <span id="totalAmount">
-
-        ₹0
-
-    </span>
-
-</div>
-
-            </div>
-
-            <div class="summary-row">
-
-                <span>
-
-                    Delivery Fee
-
-                </span>
-
-                <span>
-
-                    ₹20
-
-                </span>
-
-            </div>
-
-            <div class="summary-row total-row">
-
-                <span>
-
-                    Total
-
-                </span>
-
-                <span>
-
-                    ₹130
-
-                </span>
-
-            </div>
-
-            <button
-                id="checkoutBtn"
-                class="checkout-btn">
-
-                Proceed To Checkout
-
-            </button>
-
-        </div>
 
     </section>
 

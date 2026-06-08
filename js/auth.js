@@ -25,14 +25,16 @@ export async function login() {
     const userRef = doc(db, "users", user.uid);
     const snap = await getDoc(userRef);
 
-    if (!snap.exists()) {
-      await setDoc(userRef, {
-        name: user.displayName,
-        email: user.email,
-        role: "user",
-        createdAt: new Date()
-      });
-    }
+    await setDoc(
+  userRef,
+  {
+    name: user.displayName,
+    email: user.email,
+    role: "user",
+    createdAt: new Date()
+  },
+  { merge: true }
+);
 
     window.location.href = "../index.html";
 
@@ -65,3 +67,27 @@ export function protectAdmin() {
     }
   });
 }
+
+/* =======================
+Already logged in
+↓
+Open login.html
+↓
+Automatically redirected to Home
+======================= */
+
+onAuthStateChanged(auth, (user) => {
+
+  const isLoginPage =
+    window.location.pathname.includes(
+      "login.html"
+    );
+
+  if (user && isLoginPage) {
+
+    window.location.href =
+      "../index.html";
+
+  }
+
+});

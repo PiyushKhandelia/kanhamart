@@ -116,7 +116,7 @@ export async function placeOrder(
   );
 
   location.href =
-    "../public/orders.html";
+    "orders.html";
 
 }
 
@@ -149,20 +149,25 @@ export async function loadOrders(){
       )
     );
 
-  container.innerHTML = "";
+container.innerHTML = "";
 
-  if(snap.empty){
+const emptyOrders =
+  document.getElementById(
+    "emptyOrders"
+  );
 
-    document
-      .getElementById(
-        "emptyOrders"
-      )
-      .classList.remove(
-        "hidden"
-      );
+emptyOrders.classList.add(
+  "hidden"
+);
 
-    return;
-  }
+if(snap.empty){
+
+  emptyOrders.classList.remove(
+    "hidden"
+  );
+
+  return;
+}
 
   snap.forEach(orderDoc => {
 
@@ -192,16 +197,16 @@ export async function loadOrders(){
           <div>
 
             <h3>
-
-              Order
-
-            </h3>
+  Order #${orderDoc.id.slice(0,8)}
+</h3>
 
             <p>
 
-              ${new Date(
-                order.createdAt
-              ).toLocaleDateString()}
+              ${
+  order.createdAt?.toDate
+    ? order.createdAt.toDate().toLocaleDateString()
+    : "N/A"
+}
 
             </p>
 
@@ -251,7 +256,7 @@ onAuthStateChanged(
     if(!user){
 
       location.href =
-        "../public/login.html";
+        "login.html";
 
       return;
     }
