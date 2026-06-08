@@ -21,18 +21,118 @@
                     <span>🔐</span>
                     Continue with Google
                 </button>
+                <button id="adminLoginBtn" class="admin-login-btn">
+                    <span>🛡️</span>
+                    Admin Portal
+                </button>
+                <!-- ADMIN ACCESS MODAL -->
+                <div id="adminModal" class="admin-modal hidden">
+                    <div class="admin-modal-card">
+                        <div class="admin-modal-icon">🛡️</div>
+                        <h2>Admin Login</h2>
+                        <input
+                            id="adminEmail"
+                            type="email"
+                            placeholder="Admin Email">
+
+                        <input
+                            id="adminPassword"
+                            type="password"
+                            placeholder="Password">
+
+                        <button
+                            id="adminLoginSubmit"
+                            class="admin-continue-btn">
+
+                            Login
+
+                        </button>
+
+                        <button
+                            id="closeAdminModal"
+                            class="admin-cancel-btn">
+
+                            Cancel
+
+                        </button>
+
+                    </div>
+
+                </div>
                 <p class="login-footer">
                     By continuing, you agree to use Kanha Mart for your grocery shopping experience.
                 </p>
             </div>
         </div>
-        <script type="module">
-            import { login } from "../js/auth.js";
+            <script type="module">
 
-            document
-            .getElementById("googleLoginBtn")
-            .addEventListener("click", login);
+import {
+  login,
+  adminLogin
+}
+from "../js/auth.js";
 
-        </script>
+/* Google Login */
+
+document
+  .getElementById("googleLoginBtn")
+  .addEventListener("click", login);
+
+/* Modal Open */
+
+const adminBtn =
+  document.getElementById("adminLoginBtn");
+
+const adminModal =
+  document.getElementById("adminModal");
+
+const closeAdminModal =
+  document.getElementById("closeAdminModal");
+
+adminBtn.addEventListener("click", () => {
+
+  adminModal.classList.remove("hidden");
+
+});
+
+closeAdminModal.addEventListener("click", () => {
+
+  adminModal.classList.add("hidden");
+
+});
+
+/* Admin Login */
+
+document
+  .getElementById("adminLoginSubmit")
+  .addEventListener("click", async () => {
+
+    const email =
+      document
+      .getElementById("adminEmail")
+      .value
+      .trim();
+
+    const password =
+      document
+      .getElementById("adminPassword")
+      .value;
+
+    if(!email || !password){
+
+      alert("Enter email and password");
+
+      return;
+
+    }
+
+    await adminLogin(
+      email,
+      password
+    );
+
+  });
+
+</script>
     </body>
 </html>

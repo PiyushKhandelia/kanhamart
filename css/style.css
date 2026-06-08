@@ -682,12 +682,10 @@ body{
 
 .dashboard-card span{
     display:block;
-
-    margin-top:10px;
-
-    color:var(--primary);
-
-    font-weight:bold;
+    margin-top:8px;
+    font-size:22px;
+    font-weight:700;
+    color:#0aad4f;
 }
 
 /* =====================================================
@@ -924,6 +922,142 @@ body{
 .btn-default{
     background:#16a34a;
     color:white;
+}
+
+/* ==========================================
+   ADMIN LOGIN SECTION
+========================================== */
+
+/* ==========================================
+   ADMIN MODAL
+========================================== */
+
+.admin-modal{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.55);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+}
+
+.admin-modal.hidden{
+    display:none;
+}
+
+.admin-modal-card{
+
+    background:white;
+
+    width:90%;
+    max-width:380px;
+
+    border-radius:20px;
+
+    padding:30px;
+
+    text-align:center;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
+}
+
+.admin-modal-icon{
+
+    font-size:60px;
+
+    margin-bottom:15px;
+}
+
+.admin-continue-btn{
+
+    width:100%;
+
+    margin-top:20px;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#111827;
+
+    color:white;
+
+    cursor:pointer;
+}
+
+.admin-cancel-btn{
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#e5e7eb;
+
+    cursor:pointer;
+}
+
+.admin-login-btn{
+
+    width:100%;
+
+    margin-top:15px;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:linear-gradient(
+        135deg,
+        #1f2937,
+        #111827
+    );
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.admin-login-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 20px rgba(
+        0,
+        0,
+        0,
+        0.25
+    );
+}
+
+.admin-login-btn span{
+
+    margin-right:8px;
+
+    font-size:18px;
 }
 
 /* =====================================================

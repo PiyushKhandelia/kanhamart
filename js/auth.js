@@ -1,13 +1,18 @@
 import { auth, db, provider } from "./firebase.js";
 import {
   signInWithPopup,
-  onAuthStateChanged
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 import {
   doc,
   getDoc,
   setDoc
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+import {
+  signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
 let isSigningIn = false;
 
@@ -25,16 +30,14 @@ export async function login() {
     const userRef = doc(db, "users", user.uid);
     const snap = await getDoc(userRef);
 
-    await setDoc(
-  userRef,
-  {
+if (!snap.exists()) {
+  await setDoc(userRef, {
     name: user.displayName,
     email: user.email,
     role: "user",
     createdAt: new Date()
-  },
-  { merge: true }
-);
+  });
+}
 
     window.location.href = "../index.html";
 
@@ -76,7 +79,7 @@ Open login.html
 Automatically redirected to Home
 ======================= */
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
 
   const isLoginPage =
     window.location.pathname.includes(
@@ -85,9 +88,87 @@ onAuthStateChanged(auth, (user) => {
 
   if (user && isLoginPage) {
 
+  const snap = await getDoc(
+    doc(db, "users", user.uid)
+  );
+
+  if (
+    snap.exists() &&
+    snap.data().role === "admin"
+  ) {
+
+    window.location.href =
+      "../public/admin.html";
+
+  } else {
+
     window.location.href =
       "../index.html";
 
   }
 
+}
+
 });
+
+/* =======================
+Admin Login
+======================= */
+
+export async function adminLogin(email,password){
+
+  try{
+
+    const result =
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+    const user =
+      result.user;
+
+    const snap =
+      await getDoc(
+        doc(
+          db,
+          "users",
+          user.uid
+        )
+      );
+
+    if(
+      snap.exists() &&
+      snap.data().role === "admin"
+    ){
+
+      window.location.href = "../public/admin.html";
+
+    }else{
+
+      alert(
+        "Not an admin account"
+      );
+
+      await signOut(auth);
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+if(error.code === "auth/user-not-found"){
+  alert("Admin account not found");
+}
+else if(error.code === "auth/wrong-password"){
+  alert("Incorrect password");
+}
+else{
+  alert(error.message);
+}
+
+  }
+
+}

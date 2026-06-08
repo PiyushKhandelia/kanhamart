@@ -72,16 +72,11 @@
 
             </div>
 
-            <div class="dashboard-card">
-
+            <div class="dashboard-card" data-target="customersSection">
                 <div class="card-icon">👥</div>
-
                 <h3>Customers</h3>
-
-                <span>Coming Soon</span>
-
+                <span id="totalCustomers">0</span>
             </div>
-
         </div>
 
         <!-- ==========================================
@@ -285,7 +280,36 @@
 
 </section>
 
+    <!-- ==========================================
+     CUSTOMER MANAGEMENT
+========================================== -->
+
+<section id="customersSection"
+         class="admin-section hidden">
+
+    <div class="section-header">
+
+        <h2>👥 Customer Management</h2>
+
     </div>
+
+    <div class="table-card">
+
+        <h3>Registered Customers</h3>
+
+        <input
+            type="text"
+            id="customerSearch"
+            placeholder="Search customer by name or email">
+        
+        <div id="customersTable"></div>
+
+    </div>
+
+</section>
+
+</div>
+
     <!-- ==========================================
          EDIT CATEGORY MODAL
     =========================================== -->

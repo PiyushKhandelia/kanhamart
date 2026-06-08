@@ -176,91 +176,68 @@ export async function loadCart(){
    UPDATE QUANTITY
 ========================================== */
 
-export async function updateQuantity(
-  productId,
-  change
-){
+export async function updateQuantity(productId, change){
 
-  const cartRef =
-    doc(
-      db,
-      "carts",
-      currentUser.uid
-    );
+  if(!currentUser) return;
 
-  const snap =
-    await getDoc(cartRef);
+  const cartRef = doc(db,"carts",currentUser.uid);
+
+  const snap = await getDoc(cartRef);
 
   if(!snap.exists()){
-   return;
-}
+    return;
+  }
 
-  const items =
-    snap.data().items || [];
+  const items = snap.data().items || [];
 
-  const item =
-    items.find(
-      i =>
-      i.productId === productId
-    );
+  const item = items.find(
+    i => i.productId === productId
+  );
 
   if(!item) return;
 
   item.quantity += change;
 
-  const filtered =
-    items.filter(
-      i =>
-      i.quantity > 0
-    );
-
-  await updateDoc(
-    cartRef,
-    {
-      items: filtered
-    }
+  const filtered = items.filter(
+    i => i.quantity > 0
   );
 
-  updateCartBadge();
+  await updateDoc(cartRef,{
+    items: filtered
+  });
+
+  await updateCartBadge();
 }
 
 /* ==========================================
    REMOVE ITEM
 ========================================== */
 
-export async function removeItem(
-  productId
-){
+export async function removeItem(productId){
 
-  const cartRef =
-    doc(
-      db,
-      "carts",
-      currentUser.uid
-    );
+  if(!currentUser) return;
 
-  const snap =
-    await getDoc(cartRef);
-
-  if(!snap.exists()){
-   return;
-}
-    
-  const items =
-    snap.data().items || [];
-
-  const filtered =
-    items.filter(
-      item =>
-      item.productId !== productId
-    );
-
-  await updateDoc(
-    cartRef,
-    {
-      items: filtered
-    }
+  const cartRef = doc(
+    db,
+    "carts",
+    currentUser.uid
   );
 
-  updateCartBadge();
+  const snap = await getDoc(cartRef);
+
+  if(!snap.exists()){
+    return;
+  }
+
+  const items = snap.data().items || [];
+
+  const filtered = items.filter(
+    item => item.productId !== productId
+  );
+
+  await updateDoc(cartRef,{
+    items: filtered
+  });
+
+  await updateCartBadge();
 }

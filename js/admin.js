@@ -11,6 +11,9 @@ import {
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
+const usersCollection =
+  collection(db, "users");
+
 /* ==========================================
    ADMIN PROTECTION
 ========================================== */
@@ -73,6 +76,10 @@ await renderCategories();
 await renderProducts();
 
 await loadOrders();
+
+await loadCustomersCount();
+
+await renderCustomers();
 
 });
 
@@ -985,5 +992,88 @@ async function refreshAdmin() {
   await renderProducts();
 
   await loadOrders();
+
+  await loadCustomersCount();
+
+  await renderCustomers();
+
+}
+
+/* Customer Management*/
+
+async function loadCustomersCount() {
+
+  const userSnap =
+    await getDocs(usersCollection);
+
+  document.getElementById(
+    "totalCustomers"
+  ).textContent =
+    userSnap.size;
+
+}
+
+  /*Load Customers*/
+  async function renderCustomers() {
+
+  const table =
+    document.getElementById(
+      "customersTable"
+    );
+
+  const snap =
+    await getDocs(usersCollection);
+
+  let html = `
+    <div class="table-wrapper">
+
+    <table class="data-table">
+
+      <thead>
+
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+  `;
+
+  snap.forEach(userDoc => {
+
+    const user =
+      userDoc.data();
+
+    html += `
+      <tr>
+
+        <td>
+          ${user.name || "-"}
+        </td>
+
+        <td>
+          ${user.email || "-"}
+        </td>
+
+        <td>
+          ${user.role || "user"}
+        </td>
+
+      </tr>
+    `;
+
+  });
+
+  html += `
+      </tbody>
+    </table>
+
+    </div>
+  `;
+
+  table.innerHTML = html;
 
 }
