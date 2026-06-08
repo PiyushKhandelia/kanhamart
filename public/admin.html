@@ -228,117 +228,100 @@
 
     <!-- ==========================================
      ORDER MANAGEMENT
-========================================== -->
+    ========================================== -->
 
-<section id="ordersSection"
-         class="admin-section hidden">
+<section id="ordersSection" class="admin-section hidden">
 
     <div class="section-header">
-
         <h2>🛒 Order Management</h2>
-
+        <p>Monitor and manage customer orders</p>
     </div>
 
-    <!-- STATUS COUNTS -->
+    <!-- Status Overview -->
 
     <div class="order-stats">
 
         <div class="order-stat-card pending">
+            <span>⏳</span>
             <h3 id="pendingCount">0</h3>
             <p>Pending</p>
         </div>
 
         <div class="order-stat-card confirmed">
+            <span>✅</span>
             <h3 id="confirmedCount">0</h3>
             <p>Confirmed</p>
         </div>
 
         <div class="order-stat-card delivery">
+            <span>🚚</span>
             <h3 id="deliveryCount">0</h3>
-            <p>Out for Delivery</p>
+            <p>Delivery</p>
         </div>
 
         <div class="order-stat-card delivered">
+            <span>📦</span>
             <h3 id="deliveredCount">0</h3>
             <p>Delivered</p>
         </div>
 
         <div class="order-stat-card cancelled">
+            <span>❌</span>
             <h3 id="cancelledCount">0</h3>
             <p>Cancelled</p>
         </div>
 
     </div>
 
-    <div class="table-card">
+    <!-- Search -->
 
-        <h3>Manage Orders</h3>
+    <div class="order-search-box">
 
-        <!-- FILTERS -->
+        <input
+            type="text"
+            id="orderSearch"
+            placeholder="Search customer name, email or order..."
+        >
 
-        <div class="order-filter">
+    </div>
 
-            <button onclick="filterOrders('All')">
-                All
-            </button>
+    <!-- Filters -->
 
-            <button onclick="filterOrders('Pending')">
-                Pending
-            </button>
+    <div class="order-filter-bar">
 
-            <button onclick="filterOrders('Confirmed')">
-                Confirmed
-            </button>
+        <button onclick="filterOrders('All')" class="active-filter">
+            All
+        </button>
 
-            <button onclick="filterOrders('Out for Delivery')">
-                Delivery
-            </button>
+        <button onclick="filterOrders('Pending')">
+            Pending
+        </button>
 
-            <button onclick="filterOrders('Delivered')">
-                Delivered
-            </button>
+        <button onclick="filterOrders('Confirmed')">
+            Confirmed
+        </button>
 
-            <button onclick="filterOrders('Cancelled')">
-                Cancelled
-            </button>
+        <button onclick="filterOrders('Out for Delivery')">
+            Delivery
+        </button>
 
-        </div>
+        <button onclick="filterOrders('Delivered')">
+            Delivered
+        </button>
 
-        <!-- ORDER CARDS -->
+        <button onclick="filterOrders('Cancelled')">
+            Cancelled
+        </button>
 
-        <div id="ordersContainer"></div>
+    </div>
 
-            <div class="order-filter-bar">
+    <!-- Orders -->
 
-    <button onclick="filterOrders('All')">
-        All
-    </button>
+    <div id="ordersContainer" class="orders-grid">
 
-    <button onclick="filterOrders('Pending')">
-        Pending
-    </button>
+    </div>
 
-    <button onclick="filterOrders('Confirmed')">
-        Confirmed
-    </button>
-
-    <button onclick="filterOrders('Out for Delivery')">
-        Delivery
-    </button>
-
-    <button onclick="filterOrders('Delivered')">
-        Delivered
-    </button>
-
-    <button onclick="filterOrders('Cancelled')">
-        Cancelled
-    </button>
-
-</div>
-
-        </div>
-
-    </section>
+</section>
 
     <!-- ==========================================
      CUSTOMER MANAGEMENT

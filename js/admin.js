@@ -734,23 +734,15 @@ if(order.status === "Pending"){
     actionButtons = `
 
         <button
-            onclick="changeOrderStatus(
-            '${orderDoc.id}',
-            'Confirmed'
-            )">
-
+          class="btn-confirm"
+          onclick="changeOrderStatus('${orderDoc.id}','Confirmed')">
             Confirm
-
         </button>
 
         <button
-            onclick="changeOrderStatus(
-            '${orderDoc.id}',
-            'Cancelled'
-            )">
-
+          class="btn-cancel"
+          onclick="changeOrderStatus('${orderDoc.id}','Cancelled')">
             Cancel
-
         </button>
 
     `;
@@ -761,13 +753,9 @@ else if(order.status === "Confirmed"){
     actionButtons = `
 
         <button
-            onclick="changeOrderStatus(
-            '${orderDoc.id}',
-            'Out for Delivery'
-            )">
-
+          class="btn-dispatch"
+          onclick="changeOrderStatus('${orderDoc.id}','Out for Delivery')">
             Dispatch
-
         </button>
 
     `;
@@ -778,13 +766,9 @@ else if(order.status === "Out for Delivery"){
     actionButtons = `
 
         <button
-            onclick="changeOrderStatus(
-            '${orderDoc.id}',
-            'Delivered'
-            )">
-
+          class="btn-deliver"
+          onclick="changeOrderStatus('${orderDoc.id}','Delivered')">
             Deliver
-
         </button>
 
     `;
@@ -1218,23 +1202,25 @@ async function refreshAdmin() {
 
 async function loadCustomersCount() {
 
+  const userSnap =
+    await getDocs(usersCollection);
+
   let customerCount = 0;
 
-userSnap.forEach(userDoc => {
+  userSnap.forEach(userDoc => {
 
-  const user = userDoc.data();
+    const user = userDoc.data();
 
-  if(user.role !== "admin"){
-    customerCount++;
-  }
+    if(user.role !== "admin"){
+      customerCount++;
+    }
 
-});
+  });
 
-document.getElementById(
-  "totalCustomers"
-).textContent =
-  customerCount;
-
+  document.getElementById(
+    "totalCustomers"
+  ).textContent =
+    customerCount;
 }
 
   /*Load Customers*/
