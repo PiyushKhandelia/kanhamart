@@ -274,15 +274,47 @@
 
         <h3>Manage Orders</h3>
 
-        <div id="ordersTable"></div>
+        <!-- FILTERS -->
 
-    </div>
+        <div class="order-filter">
 
-</section>
+            <button onclick="filterOrders('All')">
+                All
+            </button>
+
+            <button onclick="filterOrders('Pending')">
+                Pending
+            </button>
+
+            <button onclick="filterOrders('Confirmed')">
+                Confirmed
+            </button>
+
+            <button onclick="filterOrders('Out for Delivery')">
+                Delivery
+            </button>
+
+            <button onclick="filterOrders('Delivered')">
+                Delivered
+            </button>
+
+            <button onclick="filterOrders('Cancelled')">
+                Cancelled
+            </button>
+
+        </div>
+
+        <!-- ORDER CARDS -->
+
+        <div id="ordersContainer"></div>
+
+        </div>
+
+    </section>
 
     <!-- ==========================================
      CUSTOMER MANAGEMENT
-========================================== -->
+    ========================================== -->
 
 <section id="customersSection"
          class="admin-section hidden">

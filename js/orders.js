@@ -27,12 +27,9 @@ let currentUser = null;
    PLACE ORDER
 ========================================== */
 
-export async function placeOrder(
-  addressId
-){
+export async function placeOrder(addressId){
 
-  if(!currentUser)
-    return;
+  if(!currentUser) return;
 
   const cartRef =
     doc(
@@ -44,15 +41,11 @@ export async function placeOrder(
   const cartSnap =
     await getDoc(cartRef);
 
-  if(
-    !cartSnap.exists()
-  ){
+  if(!cartSnap.exists()){
 
-    alert(
-      "Cart is empty"
-    );
-
+    alert("Cart is empty");
     return;
+
   }
 
   const items =
@@ -60,12 +53,37 @@ export async function placeOrder(
 
   if(items.length === 0){
 
-    alert(
-      "Cart is empty"
+    alert("Cart is empty");
+    return;
+
+  }
+
+  /* --------------------------
+     ADDRESS DETAILS
+  -------------------------- */
+
+  const addressSnap =
+    await getDoc(
+      doc(
+        db,
+        "addresses",
+        addressId
+      )
     );
 
+  if(!addressSnap.exists()){
+
+    alert("Address not found");
     return;
+
   }
+
+  const address =
+    addressSnap.data();
+
+  /* --------------------------
+     TOTAL
+  -------------------------- */
 
   let total = 0;
 
@@ -79,6 +97,10 @@ export async function placeOrder(
 
   total += 20;
 
+  /* --------------------------
+     SAVE ORDER
+  -------------------------- */
+
   await addDoc(
     collection(
       db,
@@ -88,6 +110,15 @@ export async function placeOrder(
 
       userId:
         currentUser.uid,
+
+      customerName:
+        address.fullName || "",
+
+      customerPhone:
+        address.mobile || "",
+
+      deliveryAddress:
+        `${address.address || ""}, ${address.city || ""}, ${address.state || ""} - ${address.pincode || ""}`,
 
       addressId,
 
@@ -103,6 +134,10 @@ export async function placeOrder(
 
     }
   );
+
+  /* --------------------------
+     CLEAR CART
+  -------------------------- */
 
   await setDoc(
     cartRef,

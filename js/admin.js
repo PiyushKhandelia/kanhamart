@@ -524,185 +524,219 @@ async function renderProducts() {
    LOAD ORDERS
 ========================================== */
 
+let currentOrderFilter = "All";
+
+window.filterOrders = function(status){
+
+    currentOrderFilter = status;
+
+    loadOrders();
+
+};
+
 async function loadOrders(){
 
-  const ordersSnap =
-    await getDocs(
-      collection(db,"orders")
-    );
+    const ordersSnap =
+        await getDocs(
+            collection(db,"orders")
+        );
 
-  const table =
+    const container =
+        document.getElementById(
+            "ordersContainer"
+        );
+
+    container.innerHTML = "";
+
+    let pending = 0;
+    let confirmed = 0;
+    let delivery = 0;
+    let delivered = 0;
+    let cancelled = 0;
+
+    ordersSnap.forEach(orderDoc => {
+
+        const order =
+            orderDoc.data();
+
+        switch(order.status){
+
+            case "Pending":
+                pending++;
+                break;
+
+            case "Confirmed":
+                confirmed++;
+                break;
+
+            case "Out for Delivery":
+                delivery++;
+                break;
+
+            case "Delivered":
+                delivered++;
+                break;
+
+            case "Cancelled":
+                cancelled++;
+                break;
+        }
+
+        if(
+            currentOrderFilter !== "All" &&
+            order.status !== currentOrderFilter
+        ){
+            return;
+        }
+
+        let productsHtml = "";
+
+        order.items?.forEach(item => {
+
+            productsHtml += `
+
+                <div class="order-product-row">
+
+                    <span>
+                        ${item.icon}
+                        ${item.name}
+                    </span>
+
+                    <span>
+                        ${item.quantity} × ₹${item.price}
+                    </span>
+
+                </div>
+
+            `;
+
+        });
+
+        container.innerHTML += `
+
+            <div class="admin-order-card">
+
+                <div class="order-card-header">
+
+                    <div>
+
+                        <h3>
+                            ${order.customerName || "Customer"}
+                        </h3>
+
+                        <p>
+                            ${order.customerPhone || ""}
+                        </p>
+
+                    </div>
+
+                    <span class="status-badge">
+
+                        ${order.status}
+
+                    </span>
+
+                </div>
+
+                <div class="order-address">
+
+                    📍
+                    ${order.deliveryAddress || ""}
+
+                </div>
+
+                <div class="order-products">
+
+                    ${productsHtml}
+
+                </div>
+
+                <div class="order-total">
+
+                    Total :
+                    ₹${order.total}
+
+                </div>
+
+                <div class="order-actions">
+
+                    <button
+                        onclick="changeOrderStatus(
+                        '${orderDoc.id}',
+                        'Confirmed'
+                        )">
+
+                        Confirm
+
+                    </button>
+
+                    <button
+                        onclick="changeOrderStatus(
+                        '${orderDoc.id}',
+                        'Out for Delivery'
+                        )">
+
+                        Dispatch
+
+                    </button>
+
+                    <button
+                        onclick="changeOrderStatus(
+                        '${orderDoc.id}',
+                        'Delivered'
+                        )">
+
+                        Deliver
+
+                    </button>
+
+                    <button
+                        onclick="changeOrderStatus(
+                        '${orderDoc.id}',
+                        'Cancelled'
+                        )">
+
+                        Cancel
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+    });
+
     document.getElementById(
-      "ordersTable"
-    );
+        "totalOrders"
+    ).textContent =
+        ordersSnap.size;
 
-  let pending = 0;
-  let confirmed = 0;
-  let delivery = 0;
-  let delivered = 0;
-  let cancelled = 0;
+    document.getElementById(
+        "pendingCount"
+    ).textContent =
+        pending;
 
-  let html = `
-    <div class="table-wrapper">
+    document.getElementById(
+        "confirmedCount"
+    ).textContent =
+        confirmed;
 
-    <table class="data-table">
+    document.getElementById(
+        "deliveryCount"
+    ).textContent =
+        delivery;
 
-      <thead>
+    document.getElementById(
+        "deliveredCount"
+    ).textContent =
+        delivered;
 
-        <tr>
-
-          <th>Customer</th>
-
-          <th>Total</th>
-
-          <th>Status</th>
-
-          <th>Action</th>
-
-        </tr>
-
-      </thead>
-
-      <tbody>
-  `;
-
-  ordersSnap.forEach(orderDoc => {
-
-    const order =
-      orderDoc.data();
-
-    switch(order.status){
-
-      case "Pending":
-        pending++;
-        break;
-
-      case "Confirmed":
-        confirmed++;
-        break;
-
-      case "Out for Delivery":
-        delivery++;
-        break;
-
-      case "Delivered":
-        delivered++;
-        break;
-
-      case "Cancelled":
-        cancelled++;
-        break;
-
-    }
-
-    html += `
-
-      <tr>
-
-        <td>
-
-          ${order.userId}
-
-        </td>
-
-        <td>
-
-          ₹${order.total}
-
-        </td>
-
-        <td>
-
-          <span
-            class="status ${order.status.toLowerCase().replaceAll(' ','-')}">
-
-            ${order.status}
-
-          </span>
-
-        </td>
-
-        <td>
-
-          <select
-            class="order-status-select"
-            onchange="changeOrderStatus(
-              '${orderDoc.id}',
-              this.value
-            )">
-
-            <option
-              ${order.status==="Pending"?"selected":""}>
-              Pending
-            </option>
-
-            <option
-              ${order.status==="Confirmed"?"selected":""}>
-              Confirmed
-            </option>
-
-            <option
-              ${order.status==="Out for Delivery"?"selected":""}>
-              Out for Delivery
-            </option>
-
-            <option
-              ${order.status==="Delivered"?"selected":""}>
-              Delivered
-            </option>
-
-            <option
-              ${order.status==="Cancelled"?"selected":""}>
-              Cancelled
-            </option>
-
-          </select>
-
-        </td>
-
-      </tr>
-
-    `;
-
-  });
-
-  html += `
-      </tbody>
-    </table>
-    </div>
-  `;
-
-  table.innerHTML = html;
-
-  document.getElementById(
-    "totalOrders"
-  ).textContent =
-    ordersSnap.size;
-
-  document.getElementById(
-    "pendingCount"
-  ).textContent =
-    pending;
-
-  document.getElementById(
-    "confirmedCount"
-  ).textContent =
-    confirmed;
-
-  document.getElementById(
-    "deliveryCount"
-  ).textContent =
-    delivery;
-
-  document.getElementById(
-    "deliveredCount"
-  ).textContent =
-    delivered;
-
-  document.getElementById(
-    "cancelledCount"
-  ).textContent =
-    cancelled;
+    document.getElementById(
+        "cancelledCount"
+    ).textContent =
+        cancelled;
 
 }
 
