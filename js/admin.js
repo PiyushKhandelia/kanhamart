@@ -26,6 +26,7 @@ protectAdmin();
 
 let currentCategoryId = null;
 let currentProductId = null;
+let currentOrderFilter = "All";
 
 const categoriesCollection = collection(db, "categories");
 const productsCollection = collection(db, "products");
@@ -524,21 +525,24 @@ async function renderProducts() {
    LOAD ORDERS
 ========================================== */
 
-let currentOrderFilter = "All";
+window.filterOrders =
+async function(status){
 
-window.filterOrders = function(status){
+  currentOrderFilter = status;
 
-    currentOrderFilter = status;
-
-    loadOrders();
+  await loadOrders();
 
 };
 
-async function loadOrders(){
+/* ==========================================
+   LOAD ORDERS
+========================================== */
+
+async function loadOrders() {
 
     const ordersSnap =
         await getDocs(
-            collection(db,"orders")
+            collection(db, "orders")
         );
 
     const container =
@@ -554,12 +558,104 @@ async function loadOrders(){
     let delivered = 0;
     let cancelled = 0;
 
-    ordersSnap.forEach(orderDoc => {
+    for (const orderDoc of ordersSnap.docs) {
 
         const order =
             orderDoc.data();
 
-        switch(order.status){
+        /* ==========================
+           CUSTOMER DETAILS
+        ========================== */
+
+        let customerName = "Unknown";
+        let customerEmail = "";
+        let customerAddress = "No Address Found";
+
+        try {
+
+            const userSnap =
+                await getDoc(
+                    doc(
+                        db,
+                        "users",
+                        order.userId
+                    )
+                );
+
+            if (userSnap.exists()) {
+
+                const userData =
+                    userSnap.data();
+
+                customerName =
+                    userData.name || "Unknown";
+
+                customerEmail =
+                    userData.email || "";
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "User Fetch Error:",
+                error
+            );
+
+        }
+
+        /* ==========================
+           ADDRESS DETAILS
+        ========================== */
+
+        try {
+
+            const addressSnap =
+                await getDoc(
+                    doc(
+                        db,
+                        "addresses",
+                        order.addressId
+                    )
+                );
+
+            if (addressSnap.exists()) {
+
+                const addressData =
+                    addressSnap.data();
+
+                customerAddress = `
+
+${addressData.fullName || ""}
+
+${addressData.mobile || ""}
+
+${addressData.address || ""}
+
+${addressData.city || ""}
+
+${addressData.state || ""}
+
+${addressData.pincode || ""}
+
+`;
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Address Fetch Error:",
+                error
+            );
+
+        }
+
+        /* ==========================
+           STATUS COUNTS
+        ========================== */
+
+        switch (order.status) {
 
             case "Pending":
                 pending++;
@@ -580,14 +676,23 @@ async function loadOrders(){
             case "Cancelled":
                 cancelled++;
                 break;
+
         }
 
-        if(
+        /* ==========================
+           STATUS FILTER
+        ========================== */
+
+        if (
             currentOrderFilter !== "All" &&
             order.status !== currentOrderFilter
-        ){
-            return;
+        ) {
+            continue;
         }
+
+        /* ==========================
+           PRODUCTS LIST
+        ========================== */
 
         let productsHtml = "";
 
@@ -598,12 +703,18 @@ async function loadOrders(){
                 <div class="order-product-row">
 
                     <span>
+
                         ${item.icon}
                         ${item.name}
+
                     </span>
 
                     <span>
-                        ${item.quantity} × ₹${item.price}
+
+                        ${item.quantity}
+                        ×
+                        ₹${item.price}
+
                     </span>
 
                 </div>
@@ -611,6 +722,83 @@ async function loadOrders(){
             `;
 
         });
+
+        /* ==========================
+           ORDER CARD
+        ========================== */
+
+        let actionButtons = "";
+
+if(order.status === "Pending"){
+
+    actionButtons = `
+
+        <button
+            onclick="changeOrderStatus(
+            '${orderDoc.id}',
+            'Confirmed'
+            )">
+
+            Confirm
+
+        </button>
+
+        <button
+            onclick="changeOrderStatus(
+            '${orderDoc.id}',
+            'Cancelled'
+            )">
+
+            Cancel
+
+        </button>
+
+    `;
+
+}
+else if(order.status === "Confirmed"){
+
+    actionButtons = `
+
+        <button
+            onclick="changeOrderStatus(
+            '${orderDoc.id}',
+            'Out for Delivery'
+            )">
+
+            Dispatch
+
+        </button>
+
+    `;
+
+}
+else if(order.status === "Out for Delivery"){
+
+    actionButtons = `
+
+        <button
+            onclick="changeOrderStatus(
+            '${orderDoc.id}',
+            'Delivered'
+            )">
+
+            Deliver
+
+        </button>
+
+    `;
+
+}
+else{
+
+    actionButtons = `
+        <span>
+            No Actions Available
+        </span>
+    `;
+
+}
 
         container.innerHTML += `
 
@@ -621,16 +809,26 @@ async function loadOrders(){
                     <div>
 
                         <h3>
-                            ${order.customerName || "Customer"}
+
+                          Order #${orderDoc.id.slice(0,8)}
+
                         </h3>
 
                         <p>
-                            ${order.customerPhone || ""}
+
+                          👤 ${customerName}
+
+                        </p>
+
+                        <p>
+
+                            📧 ${customerEmail}
+
                         </p>
 
                     </div>
 
-                    <span class="status-badge">
+                    <span class="status-badge status-${order.status.toLowerCase().replaceAll(" ", "-")}">
 
                         ${order.status}
 
@@ -638,10 +836,19 @@ async function loadOrders(){
 
                 </div>
 
+                <div class="order-date">
+
+                    🗓️ ${
+                        order.createdAt?.toDate
+                        ? order.createdAt.toDate().toLocaleString()
+                        : "N/A"
+                    }
+
+                </div>
+
                 <div class="order-address">
 
-                    📍
-                    ${order.deliveryAddress || ""}
+                    📍 ${customerAddress}
 
                 </div>
 
@@ -660,53 +867,15 @@ async function loadOrders(){
 
                 <div class="order-actions">
 
-                    <button
-                        onclick="changeOrderStatus(
-                        '${orderDoc.id}',
-                        'Confirmed'
-                        )">
+    ${actionButtons}
 
-                        Confirm
-
-                    </button>
-
-                    <button
-                        onclick="changeOrderStatus(
-                        '${orderDoc.id}',
-                        'Out for Delivery'
-                        )">
-
-                        Dispatch
-
-                    </button>
-
-                    <button
-                        onclick="changeOrderStatus(
-                        '${orderDoc.id}',
-                        'Delivered'
-                        )">
-
-                        Deliver
-
-                    </button>
-
-                    <button
-                        onclick="changeOrderStatus(
-                        '${orderDoc.id}',
-                        'Cancelled'
-                        )">
-
-                        Cancel
-
-                    </button>
-
-                </div>
+</div>
 
             </div>
 
         `;
 
-    });
+    }
 
     document.getElementById(
         "totalOrders"
@@ -741,20 +910,32 @@ async function loadOrders(){
 }
 
 window.changeOrderStatus =
-async function(orderId,status){
+async function(orderId, status){
 
-  await updateDoc(
-    doc(
-      db,
-      "orders",
-      orderId
-    ),
-    {
-      status
-    }
-  );
+  try{
 
-  await loadOrders();
+    await updateDoc(
+      doc(
+        db,
+        "orders",
+        orderId
+      ),
+      {
+        status
+      }
+    );
+
+    await loadOrders();
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "Failed to update order"
+    );
+
+  }
 
 };
 
@@ -1037,13 +1218,22 @@ async function refreshAdmin() {
 
 async function loadCustomersCount() {
 
-  const userSnap =
-    await getDocs(usersCollection);
+  let customerCount = 0;
 
-  document.getElementById(
-    "totalCustomers"
-  ).textContent =
-    userSnap.size;
+userSnap.forEach(userDoc => {
+
+  const user = userDoc.data();
+
+  if(user.role !== "admin"){
+    customerCount++;
+  }
+
+});
+
+document.getElementById(
+  "totalCustomers"
+).textContent =
+  customerCount;
 
 }
 
