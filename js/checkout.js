@@ -88,39 +88,26 @@ async function loadAddresses(){
 
   snap.forEach(doc => {
 
-    if(address.isDefault){
-      selectedAddress = doc.id;
-      }
+    const address = doc.data();
 
-    const address =
-      doc.data();
+    if(address.isDefault){
+        selectedAddress = doc.id;
+    }
 
     container.innerHTML += `
-
       <div
-  class="address-card checkout-address ${
-    address.isDefault ? "active-address" : ""
-  }"
-  onclick="selectAddress('${doc.id}', this)">
+        class="address-card checkout-address ${
+          address.isDefault ? "active-address" : ""
+        }"
+        onclick="selectAddress('${doc.id}', this)">
 
-        <h3>
+        <h3>${address.fullName}</h3>
 
-          ${address.fullName}
-
-        </h3>
-
-        <p>
-
-          ${address.address}
-
-        </p>
+        <p>${address.address}</p>
 
       </div>
-
     `;
-
-  });
-
+});
 }
 
 window.selectAddress =
